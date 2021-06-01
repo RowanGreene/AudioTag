@@ -6,10 +6,9 @@ helpstrs = {"help": "help [COMMAND]: display help for COMMAND, or a list of " \
 		"the user will be prompted for one.", "save": "save: save "\
 		"changes made to the audio file", "quit": "quit: terminate "\
 		"the program", "listTags": "listTags: list the song's tags as "\
-		"key-value pairs", "deleteTag": "deleteTag TAG: remove TAG "\
-		"from the song's metadata. If multiple occurrences of TAG are "\
-		"present, the first one (as shown by listTags) will be "\
-		"deleted"}
+		"key-value pairs", "deleteTag": "deleteTag TAG VALUE: remove "\
+		"the occurence of TAG with value VALUE from the song's "\
+		"metadata. VALUE is case-sensitive, while TAG is not."}
 
 def printHelp(*args):
 
@@ -52,17 +51,18 @@ def listTags(*args):
 
 def deleteTag(*args):
 
-	if (len(args) != 1):
-		print("Usage: deleteTag TAG")
+	if (len(args) != 2):
+		print("Usage: deleteTag TAG VALUE")
 		return 1
-
-	arg = args[0]
-	# TODO: this doesn't detect tags, probably has something to do with them
-	# being tuples instead of just strings. Try looping through keys
+	
+	key = args[0].upper()
+	value = args[1]
 	try:
-		song.tags.remove(arg)
+		song.tags.remove((key, value))
+		return 0
+	
 	except ValueError:
-		print("Error: tag not present", file=sys.stderr)
+		print("Tag not found", file=sys.stderr)
 		return 1
 	
 # Import system functionality
@@ -100,8 +100,7 @@ commands = {"save": saveSong, "help": printHelp, "addTag": addTag, "listTags":
 # Input loop
 while (True):
 
-	# Get raw input, because apparently you can't assign variables as part
-	# of a while loop's condition in Python
+	# Get command string
 	raw = input(": ")
 
 	# Split args at spaces
