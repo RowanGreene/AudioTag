@@ -47,9 +47,6 @@ def printHelp(*args):
 	return 0
 
 
-# Forward declaration
-song = None
-
 def saveSong(*args):
 
 	song.save()
