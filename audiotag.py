@@ -21,7 +21,8 @@ if filetype == "flac":
 	from mutagen.flac import FLAC
 	song = FLAC(argv[1])
 else:
-	print("Error: unsupported filetype. Supported types are: {supportedTypes}", file=stderr)
+	print("Error: unsupported filetype. Supported types are: {supportedTypes}", file=stderr, sep=" ")
+	exit(1)
 
 
 helpstrs = {"help": "help [COMMAND]: display help for COMMAND, or a list of " \
@@ -89,9 +90,6 @@ def deleteTag(*args):
 		print("Tag not found", file=stderr)
 		return 1
 	
-
-# Load song
-song = FLAC(argv[1])
 
 # Keys are accepted commands, values are the internal functions that we call
 commands = {"save": saveSong, "help": printHelp, "addTag": addTag, "listTags":
