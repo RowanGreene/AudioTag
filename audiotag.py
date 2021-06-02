@@ -1,5 +1,17 @@
 #!/usr/bin/python3
 
+# Standard library imports
+import sys
+
+# Third-party imports
+# Import mutagen flac functionality, or fail gracefully.
+try:
+	from mutagen.flac import FLAC, Picture
+except:
+	print("Error loading required library - run `pip3 install mutagen` and try again", file=sys.stderr)
+	exit(1)
+
+helpstrs = {"help": "help [COMMAND]: display help for COMMAND, or a list of " \
 helpstrs = {"help": "help [COMMAND]: display help for COMMAND, or a list of " \
 		"accepted commands if none is given", "addTag": "addTag TAG "\
 		"[VALUE]: set new tag TAG to VALUE. If no VALUE is supplied, "\
@@ -65,15 +77,7 @@ def deleteTag(*args):
 		print("Tag not found", file=sys.stderr)
 		return 1
 	
-# Import system functionality
-import sys
 
-# Import mutagen flac functionality, or fail gracefully.
-try:
-	from mutagen.flac import FLAC, Picture
-except:
-	print("Error loading required library - run `pip3 install mutagen` and try again", file=sys.stderr)
-	exit(1)
 
 # Because there is no argc
 argc = len(sys.argv)
