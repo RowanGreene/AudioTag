@@ -14,26 +14,37 @@ if len(argv) < 2:
 	print(f"Usage: {argv[0]} FILE", file=stderr)
 	exit(1)
 
-supportedTypes = ["flac"]
+supportedTypes = ["flac", "ogg"]
 filetype = argv[1].split(".")[-1].casefold()
 
+# Conditional imports
 if filetype == "flac":
 	from mutagen.flac import FLAC
 	song = FLAC(argv[1])
+
+elif filetype == "ogg":
+	from mutagen.oggvorbis import OggVorbis
+	song = OggVorbis(argv[1])
+
+#elif filetype == "mp3":
+	#from mutagen.mp3 import MP3
+	# TODO: look at the tag specifications and figure out how to handle this
+	#from mutagen.id3 import Frame
+	#song = MP3(argv[1])
 else:
 	print("Error: unsupported filetype. Supported types are: {supportedTypes}", file=stderr, sep=" ")
 	exit(1)
 
 
-helpstrs = {"help": "help [COMMAND]: display help for COMMAND, or a list of " \
-		"accepted commands if none is given", "addTag": "addTag TAG "\
-		"[VALUE]: set new tag TAG to VALUE. If no VALUE is supplied, "\
-		"the user will be prompted for one.", "save": "save: save "\
-		"changes made to the audio file", "quit": "quit: terminate "\
-		"the program", "listTags": "listTags: list the song's tags as "\
-		"key-value pairs", "deleteTag": "deleteTag TAG VALUE: remove "\
-		"the occurence of TAG with value VALUE from the song's "\
-		"metadata. VALUE is case-sensitive, while TAG is not."}
+helpstrs = {"help": "help [COMMAND...]: display help for COMMAND, or a list "\
+		"of accepted commands if none is given", "addTag": "addTag "\
+		"TAG [VALUE]: set new tag TAG to VALUE. If no VALUE is "\
+		"supplied, the user will be prompted for one.", "save":\
+		"save: save changes made to the audio file", "quit": "quit: "\
+		"terminate the program", "listTags": "listTags: list the "\
+		"song's tags as key-value pairs", "deleteTag": "deleteTag TAG "\
+		"VALUE: remove the occurence of TAG with value VALUE from the "\
+		"song's metadata. VALUE is case-sensitive, while TAG is not."}
 
 def printHelp(*args):
 
@@ -99,6 +110,8 @@ while (True):
 	raw = input(": ")
 
 	# Split args at spaces
+	# TODO: This doesn't work if the key or value have a space. Figure
+	# backslash escaping and/or quoting out
 	args = raw.split(" ")
 
 	# First arg is command entered
